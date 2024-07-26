@@ -15,14 +15,17 @@ tasklist:
 optimize:
   enabled: false
 
+operate:
+  enabled: false
+
 connectors:
   enabled: false
 
 # Reduce for Zeebe and Gateway the configured replicas and with that the required resources
 # to get it running locally
 zeebe:
-  clusterSize: 11
-  partitionCount: 11
+  clusterSize: 18
+  partitionCount: 18
   replicationFactor: 3
   pvcSize: 10Gi
 
@@ -34,7 +37,9 @@ elasticsearch:
     replicaCount: 1
     persistence:
       size: 15Gi
-      
+    resources:
+      cpu: 5
+          
 
 prometheusServiceMonitor:
   enabled: true      

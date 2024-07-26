@@ -6,6 +6,9 @@ global:
 identity:
   enabled: false
 
+identityKeycloak:
+  enabled: false
+
 
 tasklist:
   enabled: true

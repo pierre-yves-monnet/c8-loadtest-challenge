@@ -62,7 +62,7 @@
     {
       "type": "SERVICETASK",
       "topic": "check-identity",
-	  "streamEnable" : true,
+	    "streamEnable" : true,
       "waitingTime": "PT0.03S",
       "modeExecution": "CLASSICAL",
 	  "variables": {"checkId": "344"}
