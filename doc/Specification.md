@@ -11,7 +11,7 @@ Bank of Andorra needs to process a substantial number of requests for a new proc
 
 ![BankOfAndora.png](BankOfAndora.png) 
 
-For further details, please consult the file [BankOfAndora.bpmn](..%2FBankOfAndora.bpmn). 
+For further details, please consult the file [BankOfAndora.bpmn](../BankOfAndora.bpmn). 
 
 ### Number of process instance per hour
 The bank aims to process 800,000 PI (Process Instances) per hour within this process. 
@@ -37,6 +37,8 @@ The estimated times for executing various service tasks are:
 
 
 For the proof of concept (POC), only UE transactions will be created, **with two accredited organizations: the European Bank and National Andorra Bank**.
+
+Workers are developped in a classical method: the worker get a job, do the treatment and complete the job.
 
 # Expectations
 

@@ -10,14 +10,19 @@ o find the correct configuration to handle the load test of Bank Of Andorra.
 According to the specifications:
 Number of service tasks per second:
 
-| label                             |          Value |
-|-----------------------------------|---------------:|
-| Number of PI/hour                 |   800,000 PI/h |
-| Number of PI/s                    |       223 PI/s |
-| Number of service task/PI         |    5 + 1*2 = 7 |
-| Number of service tasks/s         |  1,561 Tasks/s |
-| Number of service tasks/partition |            150 |
-| Number of partitions              |             11 |
+| label                                 |          Value |
+|---------------------------------------|---------------:|
+| Number of PI/hour                     |   800,000 PI/h |
+| Number of PI/s                        |       223 PI/s |
+| Number of service task/PI             |    5 + 1*2 = 7 |
+| Number of service tasks/s             |  1,561 Tasks/s |
+| Number of service tasks/partition (*) |            150 |
+| Number of partitions                  |             11 |
+
+
+(*) Where come this number? SaaS environment explain a Large Saas Environment can handle 500 services tasks per second, with 3 partitions.
+So, the metric is 500/3 = 166 services task/partition. We use 150 as a conservative way. We will see during this load test that multiple factors impact the number of partitions. 
+But this value is a good starting point.
 
 
 So, the idea is to start with 11 partitions.
@@ -26,10 +31,10 @@ Next steps consist of identifying the number of worker threads.
 
 The method is the following:
 * calculate the CAPACITY of one thread
-* * calculate the LOAD of the worker
+* calculate the LOAD of the worker
 
 
-The calcul is based on a period of time. The minute is a good candidate if the service task run under the minute. Else, choose a larger base, like the hour.
+The calculation is based on a period of time. The minute is a good candidate if the service task run under the minute. Else, choose a larger base, like the hour.
 
 In hour situation, all service task is around the second, so we consider the minute as a good candidate.
 
@@ -52,23 +57,53 @@ At the end, number of worker is an estimation. In Camunda 8, a worker can host m
 A service which need to turn a JPEG image is very CPU consuming, and maybe the worker can handle only 10 threads before it overload the CPU of the pod.
 On the other range, when the worker just send a REST API to an external service, the worker can handle 300 threads, and if it implement the Reactiv programmation, maybe 1000 jobs at a time.
 
-For an average, we use the value of 250 threads per worker. 
+
+Capacity per worker:
+
+| Service                  |  Execution (ms) | Capacity/mn |
+|--------------------------|----------------:|------------:|
+| check-identity           |              30 |        2000 |
+| check-transaction        |             100 |         600 |
+| national-transaction     |            1200 |          50 |
+| validate-UE-bank         |             300 |          20 |
+| ue-transaction           |            1300 |          46 | 
+| wyse-registration        |            1200 |          50 |
+| wyse-transaction         |            1400 |          42 |
+| notify-customer          |              80 |         750 |
+| undo-transaction         |            4300 |          13 |
+
+Load per worker:
+
+| Service                  | Nb tasks/process |Number of task/s |  Load/mn |
+|--------------------------|-----------------:|----------------:|---------:|
+| check-identity           |                1 |             223 |    13380 |
+| check-transaction        |                1 |             223 |    13380 |
+| national-transaction     |                1 |             223 |    13380 |
+| validate-UE-bank         |                1 |             223 |    13380 |
+| verify-accreditation-org |                2 |             446 |    26760 |
+| ue-transaction           |                1 |             223 |    13380 |
+| wyse-registration        |                1 |             223 |    13380 |
+| wyse-transaction         |                1 |             223 |    13380 |
+| notify-customer          |                1 |             223 |    13380 |
+| undo-transaction         |                1 |             223 |    13380 |
 
 
-The number of worker per service task is
+Calculation:
+For an average, we use the value of 250 threads per worker.
 
-| Service                  |  Execution (ms) | Capacity/mn | Nb tasks/process |Number of task/s |  Load/mn | Nb threads | Worker |
-|--------------------------|----------------:|------------:|-----------------:|----------------:|---------:|-----------:|-------:|
-| check-identity           |              30 |        2000 |                1 |             223 |    13380 |       6.69 |      1 |
-| check-transaction        |             100 |         600 |                1 |             223 |    13380 |       22.3 |      1 |
-| national-transaction     |            1200 |          50 |                1 |             223 |    13380 |      267.6 |      2 |
-| validate-UE-bank         |             300 |          20 |                1 |             223 |    13380 |       66.9 |      1 |
-| verify-accreditation-org |             400 |         150 |                2 |             446 |    26760 |      178.4 |      1 |
-| ue-transaction           |            1300 |          46 |                1 |             223 |    13380 |      289.9 |      2 |
-| wyse-registration        |            1200 |          50 |                1 |             223 |    13380 |      267.6 |      2 |
-| wyse-transaction         |            1400 |          42 |                1 |             223 |    13380 |      312.2 |      2 |
-| notify-customer          |              80 |         750 |                1 |             223 |    13380 |      17.84 |      1 |
-| undo-transaction         |            4300 |          13 |                1 |             223 |    13380 |      958.9 |      4 |
+
+| Service                  | Capacity/mn |   Load/mn | Nb threads (Load/Capacity) | Workers |
+|--------------------------|------------:|----------:|---------------------------:|--------:|
+| check-identity           |        2000 |     13380 |                       6.69 |       1 |
+| check-transaction        |         600 |     13380 |                       22.3 |       1 |
+| national-transaction     |          50 |     13380 |                      267.6 |       2 |
+| validate-UE-bank         |          20 |     13380 |                       66.9 |       1 |
+| verify-accreditation-org |         150 |     26760 |                      178.4 |       1 |
+| ue-transaction           |          46 |     13380 |                      289.9 |       2 |
+| wyse-registration        |          50 |     13380 |                      267.6 |       2 |
+| wyse-transaction         |          42 |     13380 |                      312.2 |       2 |
+| notify-customer          |         750 |     13380 |                      17.84 |       1 |
+| undo-transaction         |          13 |     13380 |                      958.9 |       4 |
 
 
 # Goal
