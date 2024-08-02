@@ -21,6 +21,7 @@ Number of service tasks per second:
 
 
 (*) Where come this number? SaaS environment explain a Large Saas Environment can handle 500 services tasks per second, with 3 partitions.
+Visit https://docs.camunda.io/docs/components/best-practices/architecture/sizing-your-environment/#camunda-8-saas
 So, the metric is 500/3 = 166 services task/partition. We use 150 as a conservative way. We will see during this load test that multiple factors impact the number of partitions. 
 But this value is a good starting point.
 
@@ -136,6 +137,8 @@ metrics-grafana-loadbalancer   LoadBalancer   10.32.12.168   34.148.16.113   80:
 Open a browser, access the external IP ( http://34.148.16.113), Login: camunda/camunda
 
 # Execute the scenario
+
+## 1. Create the cluster
 Deploy the cluster (replace _1 by the correct test execution)
 
 ````shell
@@ -144,6 +147,9 @@ helm install --namespace camunda  camunda camunda/camunda-platform -f test_1/C8_
 ````
 
 
+
+## 2. Upload the process from the modeler
+
 Upload the process
 ````shell
 kubectl port-forward svc/camunda-zeebe-gateway 26500:26500 -n camunda
@@ -151,16 +157,20 @@ kubectl port-forward svc/camunda-zeebe-gateway 26500:26500 -n camunda
 
 On the modeler, deploy the process `BankOfAndora.bpmn`
 
+## 3. Load the scenario
+
 Load the scenario in a config map
 
 ````shell
+cd solution
 kubectl create configmap bankscn --from-file=SCN_BankOfAndora.json
 ````
 
+## 4. Start the test
 Start the test:
 
 ````shell
-kubectl create -f test_1/k8_BankOfAndora-1.yaml
+kubectl create -f test_1/LoadTest_BankOfAndora-1.yaml
 kubectl get pods
 kubectl logs -f pa-creation-55f4467c96-z5j5j
 ````
