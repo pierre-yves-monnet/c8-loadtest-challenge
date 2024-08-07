@@ -122,9 +122,11 @@ One Kubernetes deployment is started for each service task.
 
 According to the rule “one pod host 250 threads worker”, ue-transaction will start 2 deployments.
 
-# Enable metrics
+# Pre-requisite
 
-Create the Graphana environment in the camunda-8-helm-profiles
+## Enable metrics
+
+Create the Grafana environment in the `camunda-8-helm-profiles` (https://github.com/camunda-community-hub/camunda-8-helm-profiles)
 
 ````shell
 cd metrics
@@ -177,7 +179,7 @@ kubectl logs -f pa-creation-55f4467c96-z5j5j
 
 and to stop it, use
 ````shell
-kubectl delete -f test_1/k8_BankOfAndora-1.yaml
+kubectl delete -f test_1/LoadTest_BankOfAndora-1.yaml
 ````
 
 # Test 1
@@ -383,7 +385,7 @@ Update
 Deactivate Operate from the Helm chart
 <<TODO>>
 
-Run manual a Operate deployment, with 3 Operate imports. There is 18 partitions, running 9 importer means each Operate will deal with 18/3=6 partitions.
+Run manual Operate deployment, with 3 Operate imports. There is 18 partitions, running 9 importer means each Operate will deal with 18/3=6 partitions.
 
 ```
 kubectl apply -f operate-importer-0.yaml -n camunda

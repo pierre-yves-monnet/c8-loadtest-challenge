@@ -30,7 +30,7 @@ spec:
                 -Dautomator.servers.camunda8.zeebeGatewayAddress=camunda-zeebe-gateway:26500
                 -Dautomator.servers.camunda8.operateUserName=demo
                 -Dautomator.servers.camunda8.operateUserPassword=demo
-                -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
+                -Dautomator.servers.camunda8.operateUrl_2=http://camunda-operate:80
                 -Dautomator.servers.camunda8.taskListUrl=
                 -Dautomator.servers.camunda8.workerExecutionThreads=100
                 -Dautomator.startup.scenarioResourceAtStartup=file:SCN_BankOfAndora.json
@@ -87,7 +87,7 @@ spec:
                 -Dautomator.servers.camunda8.zeebeGatewayAddress=camunda-zeebe-gateway:26500
                 -Dautomator.servers.camunda8.operateUserName=demo
                 -Dautomator.servers.camunda8.operateUserPassword=demo
-                -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
+                -Dautomator.servers.camunda8.operateUrl_2=http://camunda-operate:80
                 -Dautomator.servers.camunda8.taskListUrl=
                 -Dautomator.servers.camunda8.workerExecutionThreads=250
                 -Dautomator.startup.scenarioResourceAtStartup=file:/SCN_BankOfAndora.json
@@ -143,7 +143,7 @@ spec:
                 -Dautomator.servers.camunda8.zeebeGatewayAddress=camunda-zeebe-gateway:26500
                 -Dautomator.servers.camunda8.operateUserName=demo
                 -Dautomator.servers.camunda8.operateUserPassword=demo
-                -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
+                -Dautomator.servers.camunda8.operateUrl_2=http://camunda-operate:80
                 -Dautomator.servers.camunda8.taskListUrl=
                 -Dautomator.servers.camunda8.workerExecutionThreads=1
                 -Dautomator.startup.scenarioResourceAtStartup=file:/SCN_BankOfAndora.json
@@ -199,7 +199,7 @@ spec:
                 -Dautomator.servers.camunda8.zeebeGatewayAddress=camunda-zeebe-gateway:26500
                 -Dautomator.servers.camunda8.operateUserName=demo
                 -Dautomator.servers.camunda8.operateUserPassword=demo
-                -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
+                -Dautomator.servers.camunda8.operateUrl_2=http://camunda-operate:80
                 -Dautomator.servers.camunda8.taskListUrl=
                 -Dautomator.servers.camunda8.workerExecutionThreads=1
                 -Dautomator.startup.scenarioResourceAtStartup=file:/SCN_BankOfAndora.json
@@ -255,7 +255,7 @@ spec:
                 -Dautomator.servers.camunda8.zeebeGatewayAddress=camunda-zeebe-gateway:26500
                 -Dautomator.servers.camunda8.operateUserName=demo
                 -Dautomator.servers.camunda8.operateUserPassword=demo
-                -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
+                -Dautomator.servers.camunda8.operateUrl_2=http://camunda-operate:80
                 -Dautomator.servers.camunda8.taskListUrl=
                 -Dautomator.servers.camunda8.workerExecutionThreads=1
                 -Dautomator.startup.scenarioResourceAtStartup=file:/SCN_BankOfAndora.json
@@ -311,7 +311,7 @@ spec:
                 -Dautomator.servers.camunda8.zeebeGatewayAddress=camunda-zeebe-gateway:26500
                 -Dautomator.servers.camunda8.operateUserName=demo
                 -Dautomator.servers.camunda8.operateUserPassword=demo
-                -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
+                -Dautomator.servers.camunda8.operateUrl_2=http://camunda-operate:80
                 -Dautomator.servers.camunda8.taskListUrl=
                 -Dautomator.servers.camunda8.workerExecutionThreads=1
                 -Dautomator.startup.scenarioResourceAtStartup=file:/SCN_BankOfAndora.json
@@ -367,7 +367,7 @@ spec:
                 -Dautomator.servers.camunda8.zeebeGatewayAddress=camunda-zeebe-gateway:26500
                 -Dautomator.servers.camunda8.operateUserName=demo
                 -Dautomator.servers.camunda8.operateUserPassword=demo
-                -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
+                -Dautomator.servers.camunda8.operateUrl_2=http://camunda-operate:80
                 -Dautomator.servers.camunda8.taskListUrl=
                 -Dautomator.servers.camunda8.workerExecutionThreads=1
                 -Dautomator.startup.scenarioResourceAtStartup=file:/SCN_BankOfAndora.json
