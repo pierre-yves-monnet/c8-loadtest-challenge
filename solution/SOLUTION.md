@@ -270,7 +270,7 @@ Start the test
 
 ````shell
 kubectl create configmap bankscn --from-file=SCN_BankOfAndora.json
-kubectl create -f test_2/k8_BankOfAndora-2.yaml
+kubectl create -f test_2/LoadTest_BankOfAndora-2.yaml
 kubectl get pods | grep crea
 kubectl logs -f pa-creation-55f4467c96-z5j5j
 ````
