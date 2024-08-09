@@ -227,7 +227,7 @@ spec:
             - name: CAMUNDA_OPERATE_WEBAPPENABLED
               value: "false"
             - name: CAMUNDA_OPERATE_IMPORTER_THREADSCOUNT
-              value: "20"
+              value: "40"
             - name: CAMUNDA_OPERATE_IMPORTER_READERTHREADSCOUNT
               value: "20"
             - name: CAMUNDA_OPERATE_CLUSTERNODE_NODECOUNT
