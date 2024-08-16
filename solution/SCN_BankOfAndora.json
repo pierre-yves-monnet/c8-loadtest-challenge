@@ -42,7 +42,7 @@
         "frequency": "PT10S",
         "numberOfExecutions": "2223",
         "realNumber": "2223",
-        "numberOfWorkers": "100"
+        "nbThreads": "103"
       }
     ]
   },
@@ -54,7 +54,7 @@
       "processId": "Tran_BOA",
       "frequency": "PT10S",
       "numberOfExecutions": "2223",
-      "numberOfWorkers": "100",
+      "nbThreads": "100",
       "variables": {
         "transaction": "UE",
         "checkId": "122"

@@ -32,7 +32,7 @@ spec:
                 -Dautomator.servers.camunda8.operateUserPassword=demo
                 -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
                 -Dautomator.servers.camunda8.taskListUrl=
-                -Dautomator.servers.camunda8.workerExecutionThreads=120
+                -Dautomator.servers.camunda8.workerExecutionThreads=200
                 -Dautomator.startup.scenarioResourceAtStartup=file:SCN_BankOfAndora.json
                 -Dautomator.startup.policyExecution=WARMINGUP|CREATION
                 -Dautomator.startup.logLevel=DASHBOARD
@@ -88,7 +88,7 @@ spec:
                 -Dautomator.servers.camunda8.operateUserPassword=demo
                 -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
                 -Dautomator.servers.camunda8.taskListUrl=
-                -Dautomator.servers.camunda8.workerExecutionThreads=250
+                -Dautomator.servers.camunda8.workerExecutionThreads=200
                 -Dautomator.startup.scenarioResourceAtStartup=file:/SCN_BankOfAndora.json
                 -Dautomator.startup.policyExecution=SERVICETASK
                 -Dautomator.startup.filterService=check-identity
@@ -144,7 +144,7 @@ spec:
                 -Dautomator.servers.camunda8.operateUserPassword=demo
                 -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
                 -Dautomator.servers.camunda8.taskListUrl=
-                -Dautomator.servers.camunda8.workerExecutionThreads=250
+                -Dautomator.servers.camunda8.workerExecutionThreads=200
                 -Dautomator.startup.scenarioResourceAtStartup=file:/SCN_BankOfAndora.json
                 -Dautomator.startup.policyExecution=SERVICETASK
                 -Dautomator.startup.filterService=check-transaction
@@ -200,7 +200,7 @@ spec:
                 -Dautomator.servers.camunda8.operateUserPassword=demo
                 -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
                 -Dautomator.servers.camunda8.taskListUrl=
-                -Dautomator.servers.camunda8.workerExecutionThreads=250
+                -Dautomator.servers.camunda8.workerExecutionThreads=200
                 -Dautomator.startup.scenarioResourceAtStartup=file:/SCN_BankOfAndora.json
                 -Dautomator.startup.policyExecution=SERVICETASK
                 -Dautomator.startup.filterService=validate-UE-bank
@@ -256,7 +256,7 @@ spec:
                 -Dautomator.servers.camunda8.operateUserPassword=demo
                 -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
                 -Dautomator.servers.camunda8.taskListUrl=
-                -Dautomator.servers.camunda8.workerExecutionThreads=250
+                -Dautomator.servers.camunda8.workerExecutionThreads=200
                 -Dautomator.startup.scenarioResourceAtStartup=file:/SCN_BankOfAndora.json
                 -Dautomator.startup.policyExecution=SERVICETASK
                 -Dautomator.startup.filterService=verify-accreditation-org
@@ -312,7 +312,7 @@ spec:
                 -Dautomator.servers.camunda8.operateUserPassword=demo
                 -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
                 -Dautomator.servers.camunda8.taskListUrl=
-                -Dautomator.servers.camunda8.workerExecutionThreads=250
+                -Dautomator.servers.camunda8.workerExecutionThreads=200
                 -Dautomator.startup.scenarioResourceAtStartup=file:/SCN_BankOfAndora.json
                 -Dautomator.startup.policyExecution=SERVICETASK
                 -Dautomator.startup.filterService=ue-transaction
@@ -368,7 +368,7 @@ spec:
                 -Dautomator.servers.camunda8.operateUserPassword=demo
                 -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
                 -Dautomator.servers.camunda8.taskListUrl=
-                -Dautomator.servers.camunda8.workerExecutionThreads=250
+                -Dautomator.servers.camunda8.workerExecutionThreads=200
                 -Dautomator.startup.scenarioResourceAtStartup=file:/SCN_BankOfAndora.json
                 -Dautomator.startup.policyExecution=SERVICETASK
                 -Dautomator.startup.filterService=notify-customer
