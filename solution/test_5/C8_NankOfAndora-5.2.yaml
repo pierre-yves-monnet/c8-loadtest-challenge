@@ -14,10 +14,8 @@ tasklist:
 
 operate:
   env:
-    - name: CAMUNDA_OPERATE_IMPORTER_THREADSCOUNT
-      value: "18"
-    - name: CAMUNDA_OPERATE_IMPORTER_READERTHREADSCOUNT
-      value: "18"
+    - name: CAMUNDA_OPERATE_IMPORTERENABLED
+      value: "false"
 
 optimize:
   enabled: false
@@ -46,4 +44,5 @@ elasticsearch:
 
 
 prometheusServiceMonitor:
-  enabled: true      
+  enabled: true
+

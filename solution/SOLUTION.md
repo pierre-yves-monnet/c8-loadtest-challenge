@@ -381,20 +381,106 @@ This is a sign Operate import is far away the reality
 
 # Test 5 - Scale Operate
 
-Update
-Deactivate Operate from the Helm chart
-<<TODO>>
+Check first the Number Of Record not exported
 
-Run manual Operate deployment, with 3 Operate imports. There is 18 partitions, running 9 importer means each Operate will deal with 18/3=6 partitions.
+![Number of records not exported](images/test_5_NumberOfRecordsNotExported.png)
+
+It must be stable.
+
+Does the operate follow the throughput?
+
+
+To investigate that situation, MonitorApplication helps
+
+Run the command as a pod
+```
+kubectl create -f camunda-8-monitor-exporters.yaml
+```
+
+A new pod is created.Identify it, and access the log
+
+```
+kubectl get pods
+```
+Search the pods `camunda-8-monitor-exporters-*`
+
+```
+kubectl logs -f camunda-8-monitor-exportersxxxxxxxx
+```
+
+Output is something like:
+
+
+```
+:       2024-12-06 19:59:27 | ZeebeSequence        | ZeebeDelta           | OperateSequence      | OperateDelta         | SequenceDelta        | Status               | ZeebeThroughput      | OperateThroughput
+: PROCESS_INSTANCE          |   159877786774272622 |               126327 |   236438980437043681 |                 1000 |   -76561193662771059 | inpr;INC. 125,327    |    473,726 rec/mn    |      3,750 rec/mn
+: PROCESS                   |   123848989752688680 |                    0 |   236438980436951096 |                    0 |  -112589990684262416 | inpr;                |          0 rec/mn    |          0 rec/mn
+: VARIABLE                  |   159877786771868918 |                10748 |   236438980437028357 |                 2800 |   -76561193665159439 | inpr;INC. 7,948      |     40,305 rec/mn    |     10,500 rec/mn
+: JOB                       |   159877786772254519 |                28862 |   236438980437034323 |                 1600 |   -76561193664779804 | inpr;INC. 27,262     |    108,232 rec/mn    |      6,000 rec/mn
+```
+
+It's clear that Zeebe produce more data than Operate can process. The Zeebe throughput is about 473, 726 records per minutes, when Operation import only 3,750 records per minute. Note this is a photography at a moment.
+
+The second parameter is the backlog: it's only 125, 327 at this moment, but it was increasing (INC. tag).
+
+
+This is acceptable if Zeebe face a peak, and after a while, stop to export. Then Operate importer can speed up the throughput. We know this should be the standard througput for multiple hour, so actions must be taken here.
+
+## Multi threads the operate importer
+
+Change the Operate configuration:
+
+````json
+operate:
+  env:
+    - name: CAMUNDA_OPERATE_IMPORTER_THREADSCOUNT
+      value: "18"
+    - name: CAMUNDA_OPERATE_IMPORTER_READERTHREADSCOUNT
+      value: "18"
+
+````
+
+Run again the same test.
+
+
+Operations are better: the delta at the end of the execution is about -193654783973520529 records (which is negative, which make no sense)
+
+````
+:       2024-12-06 21:36:53 | ZeebeSequence        | ZeebeDelta           | OperateSequence      | OperateDelta         | SequenceDelta        | Status               | ZeebeThroughput      | OperateThroughput
+: PROCESS_INSTANCE          |   191402984167113759 |                49663 |   385057768140634288 |                 8200 |  -193654783973520529 | inpr;INC. 41,463     |    186,236 rec/mn    |     30,750 rec/mn
+: PROCESS                   |   123848989752688643 |                    0 |   385057768140177426 |                    0 |  -261208778387488783 | inpr;                |          0 rec/mn    |          0 rec/mn
+: VARIABLE                  |   191402984163564790 |                 4734 |   385057768140585522 |                 7800 |  -193654783977020732 | inpr;dec. -3,066     |     17,752 rec/mn    |     29,250 rec/mn
+: JOB                       |   191402984164138440 |                11451 |   385057768140623505 |                 8200 |  -193654783976485065 | inpr;INC. 3,251      |     42,941 rec/mn    |     30,750 rec/mn
+````
+
+
+## Deploy multiple operate pods
+
+Use the `C8_NankOfAndora-5.2.yaml`
+
+This environment start an Operate, without the importer
+
+````
+operate:
+  env:
+    - name: CAMUNDA_OPERATE_IMPORTERENABLED
+      value: "false"
+````
+
+Start the three importers
+
+Run manual Operate deployment, with 3 Operate imports. There is 18 partitions, running 3 importers means each Operate will deal with 18/3=6 partitions.
 
 ```
 kubectl apply -f operate-importer-0.yaml -n camunda
 kubectl apply -f operate-importer-1.yaml -n camunda
 kubectl apply -f operate-importer-2.yaml -n camunda
-kubectl apply -f importer-service.yaml
 ```
+Note: this step does not work.
+
 
 Check the logs on one importer
+
 ```
 2024-04-17 17:17:02.546  INFO 7 --- [           main] i.c.o.z.RecordsReaderHolder              : Starting import for partitions: [1,2,3,4,5,6]
 ```
