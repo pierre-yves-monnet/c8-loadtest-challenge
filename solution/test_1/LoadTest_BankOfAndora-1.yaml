@@ -28,6 +28,7 @@ spec:
                 -Dautomator.startup.serverName=zeebeCloud
                 -Dautomator.servers.camunda8.name=zeebeCloud
                 -Dautomator.servers.camunda8.zeebeGatewayAddress=camunda-zeebe-gateway:26500
+                -Dautomator.servers.camunda8.zeebeGrpcAddress="http://camunda-zeebe-gateway:26500"
                 -Dautomator.servers.camunda8.operateUserName=demo
                 -Dautomator.servers.camunda8.operateUserPassword=demo
                 -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
@@ -85,6 +86,7 @@ spec:
                 -Dautomator.serversList=
                 -Dautomator.servers.camunda8.name=zeebeCloud
                 -Dautomator.servers.camunda8.zeebeGatewayAddress=camunda-zeebe-gateway:26500
+                -Dautomator.servers.camunda8.zeebeGrpcAddress="http://camunda-zeebe-gateway:26500"
                 -Dautomator.servers.camunda8.operateUserName=demo
                 -Dautomator.servers.camunda8.operateUserPassword=demo
                 -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
@@ -141,6 +143,7 @@ spec:
                 -Dautomator.startup.serverName=zeebeCloud
                 -Dautomator.servers.camunda8.name=zeebeCloud
                 -Dautomator.servers.camunda8.zeebeGatewayAddress=camunda-zeebe-gateway:26500
+                -Dautomator.servers.camunda8.zeebeGrpcAddress="http://camunda-zeebe-gateway:26500"
                 -Dautomator.servers.camunda8.operateUserName=demo
                 -Dautomator.servers.camunda8.operateUserPassword=demo
                 -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
@@ -197,6 +200,7 @@ spec:
                 -Dautomator.startup.serverName=zeebeCloud
                 -Dautomator.servers.camunda8.name=zeebeCloud
                 -Dautomator.servers.camunda8.zeebeGatewayAddress=camunda-zeebe-gateway:26500
+                -Dautomator.servers.camunda8.zeebeGrpcAddress="http://camunda-zeebe-gateway:26500"
                 -Dautomator.servers.camunda8.operateUserName=demo
                 -Dautomator.servers.camunda8.operateUserPassword=demo
                 -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
@@ -253,6 +257,7 @@ spec:
                 -Dautomator.startup.serverName=zeebeCloud
                 -Dautomator.servers.camunda8.name=zeebeCloud
                 -Dautomator.servers.camunda8.zeebeGatewayAddress=camunda-zeebe-gateway:26500
+                -Dautomator.servers.camunda8.zeebeGrpcAddress="http://camunda-zeebe-gateway:26500"
                 -Dautomator.servers.camunda8.operateUserName=demo
                 -Dautomator.servers.camunda8.operateUserPassword=demo
                 -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
@@ -309,6 +314,7 @@ spec:
                 -Dautomator.startup.serverName=zeebeCloud
                 -Dautomator.servers.camunda8.name=zeebeCloud
                 -Dautomator.servers.camunda8.zeebeGatewayAddress=camunda-zeebe-gateway:26500
+                -Dautomator.servers.camunda8.zeebeGrpcAddress="http://camunda-zeebe-gateway:26500"
                 -Dautomator.servers.camunda8.operateUserName=demo
                 -Dautomator.servers.camunda8.operateUserPassword=demo
                 -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
@@ -365,6 +371,7 @@ spec:
                 -Dautomator.startup.serverName=zeebeCloud
                 -Dautomator.servers.camunda8.name=zeebeCloud
                 -Dautomator.servers.camunda8.zeebeGatewayAddress=camunda-zeebe-gateway:26500
+                -Dautomator.servers.camunda8.zeebeGrpcAddress="http://camunda-zeebe-gateway:26500"
                 -Dautomator.servers.camunda8.operateUserName=demo
                 -Dautomator.servers.camunda8.operateUserPassword=demo
                 -Dautomator.servers.camunda8.operateUrl=http://camunda-operate:80
