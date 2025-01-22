@@ -291,7 +291,7 @@ Result
 |------------|------:|-------:|
 | Creation   | 53520 | 113564 |
 | Process    | 40140 |   5792 |
-| Throughput |  1561 |    1200 |
+| Throughput |  1561 |   1200 |
 
 There is still some backpressure. The `checkTransition` is not anymore a bottleneck, but now next task appears as bottleneck
 
@@ -484,4 +484,22 @@ Check the logs on one importer
 ```
 2024-04-17 17:17:02.546  INFO 7 --- [           main] i.c.o.z.RecordsReaderHolder              : Starting import for partitions: [1,2,3,4,5,6]
 ```
+
+# Test 6 - Check ElasticSearch shard
+
+Run the test for 10 minutes,
+Estimate the size of the data for one month, assuming the customer want to keep the history to 1 months
+Check if the sharding will be enough. The guildeline from ElasticSearch is to keep a shard from 10 to 50 Gb
+
+1/ Run a 10 mn load test
+
+2/ Check the Shard on each indexes
+
+3/ Estimate
+
+4/ change the sharding
+
+
+
+
 
