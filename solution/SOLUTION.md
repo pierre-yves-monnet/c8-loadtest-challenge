@@ -346,7 +346,7 @@ Verify-acreditation to 4 (+2)
 ````shell
 kubectl create namespace camunda
 
-helm install --namespace camunda camunda camunda/camunda-platform -f test_4/C8_BankOfAndora-3.yaml
+helm install --namespace camunda camunda camunda/camunda-platform -f test_4/C8_BankOfAndora-4.yaml
 ````
 
 Start the test
@@ -456,7 +456,7 @@ Operations are better: the delta at the end of the execution is about -193654783
 
 ## Deploy multiple operate pods
 
-Use the `C8_NankOfAndora-5.2.yaml`
+Use the `C8_BankOfAndora-5.2.yaml`
 
 This environment start an Operate, without the importer
 
@@ -491,15 +491,320 @@ Run the test for 10 minutes,
 Estimate the size of the data for one month, assuming the customer want to keep the history to 1 months
 Check if the sharding will be enough. The guildeline from ElasticSearch is to keep a shard from 10 to 50 Gb
 
-1/ Run a 10 mn load test
+## Run a 10 mn load test
+This is necessary to populate the different indexes in ElasticSearch.
 
-2/ Check the Shard on each indexes
+## Check the size on each indexes
 
-3/ Estimate
+6.1 Port forward the ElasticSearch port
 
-4/ change the sharding
+```shell
+kubectl port-forward svc/camunda-elasticsearch 9200:9200 -n camunda
+```
+
+6.2 Check indexes
+```shell
+$ curl -X GET localhost:9200/_cat/indices
+green open operate-flownode-instance-8.3.1_                        CrnBBtCkTfufbVPYe0J9pA 1 0  1419132  84776 363.8mb 363.8mb 363.8mb
+green open operate-incident-8.3.1_                                 9Imn_mqaRH2gcAyOOtjusQ 1 0        0      0    249b    249b    249b
+green open zeebe-record_command-distribution_8.6.9_2025-02-20      sjUL1-ZiQtGdTDQizusazQ 1 0       36      0    24kb    24kb    24kb
+green open operate-user-task-8.5.0_                                had8hsqyS2iJvWVrrNoZHA 1 0        0      0    249b    249b    249b
+green open zeebe-record_job_8.6.9_2025-02-20                       IXTSi4qwS0-LrulcHOCwng 3 0  4070459  12206 659.6mb 659.6mb 659.6mb
+green open operate-sequence-flow-8.3.0_2025-02-20                  2d3_NMFZTXeX4DtnaK5TEQ 1 0     1800      0 127.7kb 127.7kb 127.7kb
+green open operate-process-8.3.0_                                  ng-XXymHRf2yk-k8GXz3dA 1 0        1      5 140.7kb 140.7kb 140.7kb
+green open tasklist-process-instance-8.3.0_                        yZJhxvR1QMOXxAeYRqpYhA 1 0   284398   2800  20.2mb  20.2mb  20.2mb
+```
+
+## Estimate the size
+
+According to ElasticSearch, a shard should stay between 10 Gb to 50 Gb
+For this exercise, we choose the first index, `operate-flownode-instance-8.3.1_`.
+
+363.8mb was generated in 10 minutes
+
+The business said we have to run 10 hours a day, and a process instance live 5 days before completion.
+The calculation is 
+```
+  Size = 363 * 6 (1 h ) * 10 ( 10h/day) * 5 = 108900 Mb =106 Gb
+```
+The best is to create 3 shards for this index
+
+## Change the sharding
+
+Stop the importer on Operate. For a 200 Gb index, it may take 2 hours to proceed. So, in that situation, it's better to stop the importer and let operate run.
+
+To stop the importer, update the environment variable, and run a Helm upgrade.
+```
+CAMUNDA_OPERATE_IMPORTERENABLED=false
+```
+In the other situation, just stopping Operate is fine.
+
+6.3 Stop Operate
+
+Operate is a deployment, so scale it to 0.
+
+```shell
+kubectl scale deployment camunda-operate --replicas=0
+```
+
+6.4 Get the detail of the index
 
 
+```shell
+$ curl -X GET localhost:9200/operate-flownode-instance-8.3.1_?pretty=true
+{
+  "operate-flownode-instance-8.3.1_" : {
+    "aliases" : {
+      "operate-flownode-instance-8.3.1_alias" : {
+        "is_write_index" : false
+      }
+    },
+    "mappings" : {
+      "dynamic" : "strict",
+      "properties" : {
+        "bpmnProcessId" : {
+          "type" : "keyword"
+        },
+        "endDate" : {
+          "type" : "date",
+          "format" : "date_time || epoch_millis"
+        },
+        "flowNodeId" : {
+          "type" : "keyword"
+        },
+        "id" : {
+          "type" : "keyword"
+        },
+        "incident" : {
+          "type" : "boolean"
+        },
+        "incidentKey" : {
+          "type" : "long"
+        },
+        "key" : {
+          "type" : "long"
+        },
+        "level" : {
+          "type" : "long"
+        },
+        "partitionId" : {
+          "type" : "integer"
+        },
+        "position" : {
+          "type" : "long"
+        },
+        "processDefinitionKey" : {
+          "type" : "long"
+        },
+        "processInstanceKey" : {
+          "type" : "long"
+        },
+        "scopeKey" : {
+          "type" : "long"
+        },
+        "startDate" : {
+          "type" : "date",
+          "format" : "date_time || epoch_millis"
+        },
+        "state" : {
+          "type" : "keyword"
+        },
+        "tenantId" : {
+          "type" : "keyword"
+        },
+        "treePath" : {
+          "type" : "keyword"
+        },
+        "type" : {
+          "type" : "keyword"
+        }
+      }
+    },
+    "settings" : {
+      "index" : {
+        "routing" : {
+          "allocation" : {
+            "include" : {
+              "_tier_preference" : "data_content"
+            }
+          }
+        },
+        "number_of_shards" : "1",
+        "blocks" : {
+          "read_only" : "false",
+          "write" : "true"
+        },
+        "provided_name" : "operate-flownode-instance-8.3.1_",
+        "creation_date" : "1740086217441",
+        "number_of_replicas" : "0",
+        "uuid" : "CrnBBtCkTfufbVPYe0J9pA",
+        "version" : {
+          "created" : "8512000"
+        }
+      }
+    }
+  }
+}
+```
+
+Save the response on the main parameters
+
+| Parameter           | Section               |                                 Values |
+|---------------------|-----------------------|---------------------------------------:|
+| Aliases name        | `aliases`             |  operate-flownode-instance-8.3.1_alias |
+| Number of shards    | `number_of_shards`    |                                      1 |
+| Number of replicas  | `number_of_replicas`  |                                      0 |
+
+6.5 Move the index as readonly
+
+```shell
+$ curl -X PUT localhost:9200/operate-flownode-instance-8.3.1_/_settings \
+-H "Content-Type: application/json" \
+-d '{    
+  "index": {
+    "blocks.read_only": false,
+    "blocks.write": true
+  }
+}
+'
+```
+Response should be
+```
+{"acknowledged":true}
+```
+
+6.6 Clone the index
+
+> Note: this information must be strictly identical on this index, not the moment to change the sharding
+ 
+
+`Aliases`, `Number of shards` and `Number of replicas` come from values saved before
+
+```shell
+$ curl -X PUT localhost:9200/operate-flownode-instance-8.3.1_/_clone/tmp_operate-flownode-instance-8.3.1 \
+ -H "Content-Type: application/json" \
+ -d '{        
+       "aliases": {
+         "operate-flownode-instance-8.3.1_alias": {
+         "is_write_index": false
+         }
+       },
+       "settings": {
+         "index.number_of_shards": 1,
+         "index.number_of_replicas": 0
+       }
+    }
+'
+```
+Response is
+```
+{"acknowledged":true,"shards_acknowledged":true,"index":"tmp_operate-flownode-instance-8.3.1"}p
+```
 
 
+6.7 Wait the end of the operation
 
+> Note Attention, this is an asynchronous command. Monitor the end of the execution
+
+```shell
+$ curl -X GET "localhost:9200/_cat/recovery/tmp_operate-flownode-instance-8.3.1/?format=json&s=target_node&active_only=true&pretty=true"
+```
+
+Wait that the result returns an empty array
+
+```
+[ ]
+```
+
+6.8 Delete the original index
+
+This is the moment to delete the original index
+
+```shell
+$ curl -X DELETE "http://localhost:9200/operate-flownode-instance-8.3.1_"
+```
+
+must return
+
+```
+{"acknowledged":true}
+```
+
+6.9 Split the index
+
+In the Split command, give the target number of shards
+
+> Note: use the aliases name in the command, and the number of replica must match.
+
+```shell
+$ curl -X POST http://localhost:9200/tmp_operate-flownode-instance-8.3.1/_split/operate-flownode-instance-8.3.1_ \
+ -H "Content-Type: application/json" \
+ -d '{        
+  "aliases": {
+    "operate-flownode-instance-8.3.1_alias": {
+      "is_write_index": false
+    }
+  },
+  "settings": {
+    "index.number_of_shards": 3,
+    "index.number_of_replicas": 0
+  }
+}
+'
+```
+
+Response is 
+```
+{"acknowledged":true,"shards_acknowledged":true,"index":"operate-flownode-instance-8.3.1_"}
+```
+
+but the command is asynchronous.
+
+6.10 Monitor the advancement 
+
+```shell
+$ curl -X GET "localhost:9200/_cat/recovery/operate-flownode-instance-8.3.1_/?format=json&s=target_node&active_only=true&pretty=true"
+```
+Wait for the empty array answer
+```
+[ ]
+```
+
+6.11 Make the index readable
+
+```shell
+$ curl -X PUT localhost:9200/operate-flownode-instance-8.3.1_/_settings \
+-H "Content-Type: application/json" \
+-d '{
+  "index": {
+    "blocks.read_only": false,
+    "blocks.write": false
+  }
+}
+'
+```
+
+6.1Z Delete the temporary index
+
+```shell
+$ curl -X DELETE "http://localhost:9200/tmp_operate-flownode-instance-8.3.1" 
+```
+
+6.13 Check the index
+
+```shell
+curl -X GET localhost:9200/_cat/indices?v=true
+
+health status index                                                   uuid                   pri rep docs.count docs.deleted store.size pri.store.size dataset.size
+green  open   operate-flownode-instance-8.3.1_                        3BKYVlOmRKOe_Q76e8W02g   3   0    2130521        63421    400.4mb        400.4mb      400.4mb
+```
+
+The `pri` column is the number of shards
+
+
+6.14 Scale up Operate
+
+```shell
+kubectl scale deployment camunda-operate --replicas=1
+```
+Check the log, and verify if Operate is up and running. 
