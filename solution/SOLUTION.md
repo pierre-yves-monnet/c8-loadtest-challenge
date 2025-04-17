@@ -520,14 +520,14 @@ green open tasklist-process-instance-8.3.0_                        yZJhxvR1QMOXx
 According to ElasticSearch, a shard should stay between 10 Gb to 50 Gb
 For this exercise, we choose the first index, `operate-flownode-instance-8.3.1_`.
 
-363.8mb was generated in 10 minutes
+363.8 Mb was generated in 10 minutes. For one hour, it's 363/10*60.
 
 The business said we have to run 10 hours a day, and a process instance live 5 days before completion.
 The calculation is 
 ```
-  Size = 363 * 6 (1 h ) * 10 ( 10h/day) * 5 = 108900 Mb =106 Gb
+  Size = 363 / 10 * 60 (1 h) * 10 (10 h/day) * 5 (days)= 108900 Mb =106 Gb
 ```
-The best is to create 3 shards for this index
+The best is to create minimum 3 shards for this index.
 
 ## Change the sharding
 
